@@ -1,0 +1,16 @@
+[Compatibility]
+limitFps = true
+maxFps = 60
+limitCpuCores = false
+cpuCoreLimit = 1
+confineCursorToWindow = true
+
+[DllSubstitution]
+# Decommentare solo se occorre un mapper DirectInput alternativo:
+#'dinput8.dll' = 'dinput8_wrap.dll'
+
+[Log]
+enable = false
+
+[Dx9]
+skipDeviceRelease = false
