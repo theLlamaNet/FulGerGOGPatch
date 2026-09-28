@@ -15,6 +15,10 @@ Included fixes:
 - mouse cursor confinement;
 - optional CPU core limit;
 - original launcher bypass;
-- "FulGer GOG Options" in-game options overlay.
+- "FulGer Patch Options" in-game options overlay (F11);
+- widescreen fix and live FOV multiplier slider (50-200%).
+
+Use F11 to change the FOV, then select "Save Options" to keep it in pop3.ini.
+The launcher preserves an existing pop3.ini when updating the payload.
 
 The original pop3.exe is never overwritten.

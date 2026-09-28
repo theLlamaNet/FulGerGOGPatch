@@ -1,17 +1,21 @@
-FULGER PATCH
+# FulGer Patch
 
-This package contains two separate editions:
+Two editions are included: `Warrior Within` and `The Two Thrones`. Run the
+`FulGer Patch.exe` in the matching folder. On the first launch, select the
+game installation folder if prompted. The launcher installs or updates its
+payload and starts the patched game executable while holding the required
+launcher mutexes. The original `pop2.exe` or `pop3.exe` is not changed.
 
-1. Warrior Within\FulGer Patch.exe
-2. The Two Thrones\FulGer Patch.exe
+The payload includes the GOG wrapper, the matching widescreen fix, and the
+F11 FOV plugin. Press **F11** in game to open **FulGer Patch Options**.
+The **FOV multiplier %** row has a slider from 50% to 200% and displays its
+current value. Changes apply while playing. Select **Save Options** to store
+the setting in `pop2.ini` or `pop3.ini`. The launcher preserves that file on
+subsequent launches.
 
-Each launcher automatically installs or updates its Payload in the game's
-installation folder, creates the required launcher mutexes, and starts the
-patched game executable directly without PrinceOfPersia.exe.
+The 100% default is saved internally as `1.001` to keep the widescreen fix's
+live update path active. `Xbox_fov` remains a separate game INI setting.
 
-If the configured installation folder cannot be found, a folder picker asks
-you to locate the directory containing the original game executable. The
-selected location is saved for future launches.
-
-The Sands of Time-specific module (gog_pop1.dll and its FOV configuration) is
-not included because it is incompatible with Warrior Within and The Two Thrones.
+Technical details, a semi-decompiled F11 menu reconstruction, the DLL loading
+path, build instructions, and binary-version requirements are in
+[Source/README.md](Source/README.md).

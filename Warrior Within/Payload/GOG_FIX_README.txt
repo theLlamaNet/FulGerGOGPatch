@@ -7,6 +7,10 @@ specific to and compatible only with The Sands of Time.
 Features: FPS limiting, cursor confinement, Direct3D 9 and DirectInput 8
 wrappers, and an optional CPU core limit configured through gog.toml.
 
+F11 opens "FulGer Patch Options". The FOV plugin loads the matching pop2w.dll
+widescreen fix, provides a 50-200% slider, and saves the setting to pop2.ini
+when "Save Options" is selected.
+
 The external FulGer Patch.exe launcher replaces PrinceOfPersia.exe: it keeps
 the POP5Launcher and POP_Watchdog mutexes alive, starts
 pop2_gogfix.exe -007, and waits until the game closes.

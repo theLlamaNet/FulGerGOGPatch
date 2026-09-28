@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -43,10 +45,34 @@ internal static class FulGerPatchLauncher
 
             if (!Directory.Exists(payload)) throw new DirectoryNotFoundException("The Payload folder was not found.");
 
+            string fovIniName = cfg.ContainsKey("FovIni") ? cfg["FovIni"] : "";
+            string fovIni = fovIniName.Length > 0 ? Path.Combine(gameDir, fovIniName) : "";
+            bool existingFovIni = fovIni.Length > 0 && File.Exists(fovIni);
+
             foreach (string source in Directory.GetFiles(payload))
             {
                 string destination = Path.Combine(gameDir, Path.GetFileName(source));
+                if (existingFovIni && string.Equals(Path.GetFileName(source), fovIniName, StringComparison.OrdinalIgnoreCase)) continue;
                 File.Copy(source, destination, true);
+            }
+
+            if (!existingFovIni && cfg.ContainsKey("FovMultiplier") && fovIni.Length > 0)
+            {
+                float fov;
+                if (!float.TryParse(cfg["FovMultiplier"], NumberStyles.Float, CultureInfo.InvariantCulture, out fov) || fov < 0.5f || fov > 2.0f)
+                    throw new InvalidDataException("FovMultiplier must be between 0.5 and 2.0 (use a decimal point).");
+                if (!File.Exists(fovIni)) throw new FileNotFoundException("FOV configuration was not found: " + fovIni);
+                string contents = File.ReadAllText(fovIni);
+                if (fov == 1.0f) fov = 1.001f;
+                string updated = Regex.Replace(contents, @"(?m)^(\s*fov_multiplier\s*=\s*)[^\r\n]*", m => m.Groups[1].Value + fov.ToString("0.000", CultureInfo.InvariantCulture));
+                if (updated == contents && !Regex.IsMatch(contents, @"(?m)^\s*fov_multiplier\s*="))
+                    throw new InvalidDataException("fov_multiplier is missing from " + fovIni);
+                File.WriteAllText(fovIni, updated);
+            }
+            if (existingFovIni)
+            {
+                string contents = File.ReadAllText(fovIni);
+                File.WriteAllText(fovIni, Regex.Replace(contents, @"(?m)^(\s*fov_multiplier\s*=\s*)1(?:\.0+)?(\s*(?://[^\r\n]*)?)$", m => m.Groups[1].Value + "1.001" + m.Groups[2].Value));
             }
 
             string executable = Path.Combine(gameDir, gameExe);
@@ -95,7 +121,7 @@ internal static class FulGerPatchLauncher
 
     private static void WriteConfig(string path, Dictionary<string, string> cfg)
     {
-        string[] order = { "GameDirectory", "OriginalExecutable", "GameExecutable", "Arguments", "Mutexes" };
+        string[] order = { "GameDirectory", "OriginalExecutable", "GameExecutable", "Arguments", "Mutexes", "FovIni", "FovMultiplier" };
         List<string> lines = new List<string>();
         foreach (string key in order)
             if (cfg.ContainsKey(key)) lines.Add(key + "=" + cfg[key]);
